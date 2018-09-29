@@ -8,7 +8,10 @@ class I386ElfBinutils < Formula
   version "2.24"
   sha256 "4930b2886309112c00a279483eaef2f0f8e1b1b62010e0239c16b22af7c346d4"
 
+  depends_on "gcc@8" => :build
+
   def install
+    ENV["CC"] = "#{Formula["gcc@8"].bin}/gcc-8"
     system "./configure", "--disable-werror",
                           "--target=i386-elf",
                           "--infodir=#{info}",
@@ -16,5 +19,9 @@ class I386ElfBinutils < Formula
                           "--prefix=#{prefix}"
     system "make"
     system "make", "install"
+  end
+
+  test do
+    system "#{bin}/i386-elf-ld", "-v"
   end
 end
